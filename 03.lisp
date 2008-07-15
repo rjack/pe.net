@@ -7,7 +7,7 @@
 ;;; What is the largest prime factor of the number 317584931803?
 
 (defun largest-prime-factor (n &optional (i 2))
-  (cond ((= n i) n)
+  (cond ((<= (/ n 2) i) n)
 	((= 0 (mod n i)) (largest-prime-factor (/ n i) i))
 	(T (largest-prime-factor n (incf i)))))
 
