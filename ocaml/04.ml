@@ -10,12 +10,19 @@
 open String;;
 
 
-let extremes_match = function str -> (str.[0] = str.[length str - 1]);;
+let extremes_match = fun str -> (str.[0] = str.[length str - 1]);;
 
-let strip_extremes = function str -> (sub str 1 (length str - 2));;
 
-let rec is_palindromic (str : string) = match length str with
+let strip_extremes = fun str -> (sub str 1 (length str - 2));;
+
+
+let rec is_palindromic = fun str -> match length str with
         | 1                                                                  -> true
         | 2 when (extremes_match str)                                        -> true
         | _ when (extremes_match str && is_palindromic (strip_extremes str)) -> true
         | _                                                                  -> false;;
+
+
+let max = fun x y -> match x < y with
+        | true  -> y
+        | false -> x;;
