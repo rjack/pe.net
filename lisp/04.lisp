@@ -8,41 +8,52 @@
 ;;; Find the largest palindrome made from the product of two 3-digit numbers.
 
 
-(defun digits (n)
-  "Ritorna il numero di cifre di n"
-  (if (< n 10)
-       1
-       (+ 1 (digits (floor (/ n 10))))))
+(defun string-palindromic-p (str &optional (i 0) (j (1- (length str))) (it-is t))
+  (if (>= i j)
+    it-is
+    (string-palindromic-p str (1+ i) (1- j) (char= (char str i) (char str j)))))
 
 
-(defun most-significant-digit (n)
-  "Ritorna la cifra piu' significativa di n"
-  (floor (/ n (expt 10 (- (digits n) 1)))))
+(defun palindromic-p (n)
+  (string-palindromic-p (write-to-string n)))
 
 
-(defun least-significant-digit (n)
-  "Ritorna la cifra meno significativa di n"
-  (- n (* 10 (floor (/ n 10)))))
+(defclass tree ()
+  ((current
+     :initform nil
+     :accessor current)
+   (exploring
+     :initform nil
+     :accessor exploring)
+   (visited
+     :initform nil
+     :accessor visited)))
 
 
-(defun strip-most-significant-digit (n)
-  "Ritorna n senza la sua cifra piu' significativa. Es: 1234 -> 234"
-  (- n (* (most-significant-digit n) (expt 10 (- (digits n) 1)))))
+(defclass mul-tree (tree)
+  ((op
+     :initform #'*
+     :accessor op)))
 
 
-(defun strip-least-significant-digit (n)
-  "Ritorna n senza la sua cifra meno significativa. Es: 1234 -> 123"
-  (floor (/ (- n (least-significant-digit n)) 10)))
+(defclass tree-state ()
+  ((args
+     :initform nil
+     :initarg :args
+     :accessor args)
+   (result
+     :accessor result)))
 
 
-(defun is-palindrome (n)
-  "Ritorna T se n e' palindromo, NIL altrimenti"
-  (cond ((= 1 (digits n)) T)
-	((and (= 2 (digits n))
-	      (= 0 (mod n 11))) T)
-	((and (= (most-significant-digit n)
-		 (least-significant-digit n))
-	      (is-palindrome
-		(strip-most-significant-digit
-		  (strip-least-significant-digit n))) T))
-	(T NIL)))
+;;; Initialize tree-state objects
+(defmethod initialize-instance :after ((this tree-state) &key op)
+  (setf (result this) (reduce op (args this))))
+
+
+(defmethod walk ((this tree) args &key stop-if)
+  (let ((current (make-instance 'tree-state :args args :op #'*)))
+    (cond ((funcall stop-if (result current)) (result current)))))
+
+
+(let ((tree (make-instance 'mul-tree)))
+  (format t "~a~%" (walk tree (list 999 999) :stop-if #'palindromic-p)))
