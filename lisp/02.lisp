@@ -10,8 +10,9 @@
 ;;; Find the sum of all the even-valued terms in the sequence which do not
 ;;; exceed one million.
 
-(print (do ((sum 0)
-	    (cur 0 next)
-	    (next 1 (+ cur next)))
-	 ((>= cur 1000000) sum)
-	 (if (= 0 (mod cur 2)) (incf sum cur))))
+(format t "~a~%"
+	(do ((sum 0)
+	     (cur 0 next)
+	     (next 1 (+ cur next)))
+	  ((>= cur 1000000) sum)
+	  (if (= 0 (mod cur 2)) (incf sum cur))))
