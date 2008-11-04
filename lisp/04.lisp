@@ -19,10 +19,7 @@
 
 
 (defclass tree ()
-  ((current
-     :initform nil
-     :accessor current)
-   (exploring
+  ((exploring
      :initform nil
      :accessor exploring)
    (visited
@@ -41,18 +38,36 @@
      :initform nil
      :initarg :args
      :accessor args)
-   (result
-     :accessor result)))
+   (value
+     :accessor value)))
 
 
 ;;; Initialize tree-state objects
 (defmethod initialize-instance :after ((this tree-state) &key op)
-  (setf (result this) (reduce op (args this))))
+  (setf (value this) (reduce op (args this))))
+
+
+;; TODO condizione di terminazione
+(defmethod following-states ((this tree-state) op)
+  (destructuring-bind (fst snd) (args this)
+    (list
+      (make-instance 'tree-state :args (list (1- fst) snd) :op op)
+      (make-instance 'tree-state :args (list fst (1- snd)) :op op))))
+
+
+(defmethod explore-further ((this tree) current-state &key stop-if)
+  (push current-state (visited this))
+  (dolist (state (following-states current-state (op this)))
+    ;; TODO controllare che state non sia NIL
+    (push state (exploring this)))	; TODO push solo se state non è tra i visited
+  (sort (exploring this) #'> :key #'value))
 
 
 (defmethod walk ((this tree) args &key stop-if)
-  (let ((current (make-instance 'tree-state :args args :op #'*)))
-    (cond ((funcall stop-if (result current)) (result current)))))
+  (let ((current-state (make-instance 'tree-state :args args :op (op this))))
+    (if (apply stop-if (value current-state) nil)
+      (value current-state)
+      (explore-further this current-state :stop-if stop-if))))
 
 
 (let ((tree (make-instance 'mul-tree)))
