@@ -10,18 +10,30 @@
  |
  +--------------------------------------------------------------------------}
 
+
 module Problem01
 	where
 
 a = 3
 b = 5
-z = 999
+z = 1000
 
-enumFromByTo from by to = [from, from + by .. to]
+
+multiples a =
+    [a, 2*a .. ]
+
+
+starters a b =
+    let    axb = a*b
+    in     (takeWhile ((>) axb) (multiples a)) ++
+           (takeWhile ((>) axb) (multiples b)) ++
+	   [axb]
+
+
+uniqueMultiplies a b =
+    map (\x -> [x, a*b+x .. ])
+        (starters a b)
+
 
 solution =
-	let	step = a * b
-	in	sum []
-	
--- TODO
--- (enumFromByTo a step z ++ enumFromByTo 6 step z ++ [9, (9 + step) .. z] ++ [12, (12 + step) .. z] ++ [15, (15 + step) .. z] ++ [5, (5 + step) .. z] ++ [10, 10 + step .. z])
+    sum (concat (map (takeWhile ((>) z)) (uniqueMultiplies a b)))
