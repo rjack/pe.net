@@ -21,7 +21,7 @@ enumFromByTo from by to = [from, from + by .. to]
 
 solution =
 	let	step = a * b
-	in	foldl (+) 0 []
+	in	sum []
 	
 -- TODO
 -- (enumFromByTo a step z ++ enumFromByTo 6 step z ++ [9, (9 + step) .. z] ++ [12, (12 + step) .. z] ++ [15, (15 + step) .. z] ++ [5, (5 + step) .. z] ++ [10, 10 + step .. z])
