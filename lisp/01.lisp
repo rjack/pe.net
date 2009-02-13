@@ -1,5 +1,3 @@
-;;;; Giacomo Ritucci, 23.37 di venerdì 14 dicembre 2007
-
 ;;; Problem 1
 ;;;
 ;;; If we list all the natural numbers below 10 that are multiples of 3 or 5,
@@ -7,9 +5,30 @@
 ;;;
 ;;; Find the sum of all the multiples of 3 or 5 below 1000.
 
-(print (do ((i 0 (1+ i))
-	    (sum 0))
-	 ((>= i 1000) sum)
-	 (if (or (= 0 (mod i 3))
-		 (= 0 (mod i 5)))
-	   (incf sum i))))
+
+(defparameter *a* 3)
+(defparameter *b* 5)
+(defparameter *z* 1000)
+(defparameter *axb* (* *a* *b*))
+
+
+(defun seq (from by to)
+  (loop for i from from to to by by collecting i))
+
+
+(defun starters (a b)
+  (let ((to (1- *axb*)))
+    (append (seq a a to) (seq b b to) (list *axb*))))
+
+
+(defun sum (from by to)
+  (loop for i from from to to by by
+	summing i into s
+	finally (return s)))
+
+
+(defun solution ()
+  (reduce '+(map
+	       'list #'(lambda (n)
+			 (sum n *axb* (1- *z*)))
+	       (starters *a* *b*))))
