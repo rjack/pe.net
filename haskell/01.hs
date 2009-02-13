@@ -12,7 +12,7 @@
 
 
 module Problem01
-	where
+    where
 
 a = 3
 b = 5
