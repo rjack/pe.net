@@ -12,8 +12,6 @@
 (defparameter *axb* (* *a* *b*))
 
 
-(defun seq (from by to)
-  (loop for i from from to to by by collecting i))
 
 
 (defun starters (a b)

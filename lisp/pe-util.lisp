@@ -1,5 +1,10 @@
+(defun seq (from by to)
+  (loop for i from from to to by by collecting i))
+
+
 (defun fibonacci-sequence (n)
-  "Return a list containing the first n elements of the fibonacci sequence"
+  "Return a list containing the first n elements of the fibonacci
+  sequence"
   (loop repeat n
     	for x = 0 then y
 	and y = 1 then (+ x y)
@@ -7,7 +12,8 @@
 
 
 (defun fibonacci-sequence-below (limit)
-  "Return a list containing the elements of the fibonacci sequence below limit"
+  "Return a list containing the elements of the fibonacci sequence
+  below limit"
   (loop for x = 0 then y
 	and y = 1 then (+ x y)
 	while (< y limit)
