@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+sbcl --noinform --end-runtime-options --no-sysinit --noprint --disable-debugger --load browser.lisp --end-toplevel-options
